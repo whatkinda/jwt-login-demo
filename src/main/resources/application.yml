@@ -1,0 +1,33 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test4
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+        ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    demo.security.jwt: DEBUG
+
+jwt:
+  header: Authorization
+  #echo 'jonghwa-seo-spring-boot-jwt-tutorial-secret-lutontown-tech-spring-boot-jwt-tutorial-secret'|base64
+  secret: am9uZ2h3YS1zZW8tc3ByaW5nLWJvb3Qtand0LXR1dG9yaWFsLXNlY3JldC1sdXRvbnRvd24tdGVjaC1zcHJpbmctYm9vdC1qd3QtdHV0b3JpYWwtc2VjcmV0Cg==
+  token-validity-in-seconds: 86400

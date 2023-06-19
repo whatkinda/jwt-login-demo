@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        .signup-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Home</h1>
+    <br>
+
+    <a id="signup" class="signup-button" href="/signup">Sign Up</a>
+    <!-- Login 버튼 -->
+    <button type="button" id="openModalButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+        Login
+    </button>
+
+    <!-- 모달 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 로그인 폼 -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // 폼 제출 막기
+
+            // 로그인 폼 데이터 가져오기
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // 로그인 처리를 위한 JSON 데이터 생성
+            var loginData = {
+                username: username,
+                password: password
+            };
+
+            // 로그인 요청 보내기
+            fetch("/api/authenticate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle 로그인 성공
+                        return response.json();
+                    } else {
+                        throw new Error("Error: " + response.status);
+                    }
+                })
+                .then(data => {
+                    // 응답으로 받은 토큰 값 콘솔에 출력
+                    console.log("토큰:", data.token);
+
+                    // 모달 닫기
+                    let loginModal = document.getElementById("loginModal");
+                    let bootstrapModal = bootstrap.Modal.getInstance(loginModal);
+                    bootstrapModal.hide();
+                })
+                .catch(error => {
+                    console.log("Error:", error);
+                });
+        });
+    </script>
+</body>
+</html>
